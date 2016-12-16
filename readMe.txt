@@ -26,7 +26,7 @@ https://youtu.be/DF8_RLVI3jQg
 
 MAINTENANCE:
 -----------
-If have any problem the tool, please don't hesitate to contact me at: 
+If you have any problem running the tool, please don't hesitate to contact me at: 
 
 ima9428@rit.edu or ibrr1@hotmail.com
 
