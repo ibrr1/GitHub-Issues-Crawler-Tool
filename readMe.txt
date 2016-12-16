@@ -1,13 +1,11 @@
-GitHub Issues Extractor Tool
-
 DESCRIPTION: 
 ------------
-
 This tool help in curling the issues from any GitHub repository. The tool only curl issues which are:
 - Closed.
 - Labeled as a bug.
 - Contain a commit url.
 - Has a Commit in a Java file.
+
 
 SETTING UP THE TOOL:
 --------------------
