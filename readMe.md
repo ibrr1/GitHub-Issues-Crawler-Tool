@@ -14,6 +14,7 @@ SETTING UP THE TOOL:
 3. Change the location to the tool location.
 4. Type "pip install -r requirements.txt" to install all the packages that you need to run the tool.
 5. Run the tool by typing python extract.py [GitHub Repo User][GitHub ٍRepo Name].
+Example: to get the issues for this repo: python extract.py ibrr1 GitHub-Issues-Extractor-Tool
 6. The tool will generate three excel files and store them in the tool location.
 
 
