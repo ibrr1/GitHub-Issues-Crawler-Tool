@@ -11,8 +11,7 @@ class GithubAPI:
     issues_payload = {
         "per_page": 100,
         "page": 1,
-        "state": "closed",
-        "labels": "bug"
+        "state": "all",
     }
     auth = ("theeibwen", "09196db17fc3dda1cfddb5a60f1516e5309d623b")
 
@@ -34,68 +33,41 @@ class GithubAPI:
 
         for e in self.raw:
             print("Checking issue " + str(e["number"]))
-            events = self.getEvents(e["number"])
 
-            if len(events) > 0:
-                issue = collections.OrderedDict()
-                issue["id"] = e["number"]
-                issue["title"] = e["title"]
-                issue["description"] = e["body"]
-                issue["comments"] = e["comments"]
-                issue["events"] = events
-                issue["created_at"] = e["created_at"]
-                issue["updated_at"] = e["updated_at"]
-                issue["closed_at"] = e["closed_at"]
+            
+            issue = collections.OrderedDict()
+            issue["id"] = e["id"]
+            issue["number"] = e["number"]
+            issue["repo_url"] = e["repository_url"]
+            issue["issue_url"] = e["url"]
+            issue["events_url"] = e["events_url"]
+            issue["state"] = e["state"]
+            issue["html_url"] = e["html_url"]
+            issue["milestone"] = e["milestone"]
+            issue["title"] = e["title"]
+            issue["description"] = e["body"]
+            issue["comments"] = e["comments"]
+            issue["created_at"] = e["created_at"]
+            issue["updated_at"] = e["updated_at"]
+            issue["closed_at"] = e["closed_at"]
 
-                self.results.append(issue)
+            labels = []
+
+            for label in e["labels"]:
+                 labelIssue = collections.OrderedDict()
+                 labelIssue["issue_id"] = e["id"]
+                 labelIssue["issue_number"] = e["number"]
+                 labelIssue["label_id"] = label["id"]
+                 labelIssue["label"] = label["name"]
+                 labels.append(labelIssue)
+                 # self.results.append(labelIssue)
+
+            issue["labels"] = labels
+
+            self.results.append(issue)
 
         return self.results
 
-    def getEvents(self, issue_id):
-        url = self.issues_api_url + "/" + str(issue_id) + "/events"
-        raw = requests.get(url, auth=self.auth).json()
-        r = []
-
-        for result in raw:
-            if not result["commit_id"]:
-                continue
-
-            commits = self.getCommit(result["commit_url"])
-
-            if len(commits) > 0:
-                event = collections.OrderedDict()
-
-                event["id"] = result["id"]
-                event["issue_id"] = issue_id
-                event["commit"] = self.getCommit(result["commit_url"])
-                event["created_at"] = result["created_at"]
-
-                r.append(event)
-
-        return r
-
-    def getCommit(self, commit_url):
-        raw = requests.get(commit_url, auth=self.auth).json()
-        r = collections.OrderedDict()
-
-        if "files" in raw.keys():
-            """
-            r["changes"] = raw["stats"]["total"]
-            r["addition"] = raw["stats"]["additions"]
-            r["deletions"] = raw["stats"]["deletions"]
-            """
-            r["files"] = []
-
-            for file in raw["files"]:
-                if "patch" in file.keys():
-                    f = collections.OrderedDict()
-
-                    f["filename"] = file["filename"]
-                    f["patch"] = file["patch"]
-
-                    r["files"].append(f)
-
-        return r
 
 if __name__ == "__main__":
     api = GithubAPI(sys.argv[1], sys.argv[2])
@@ -103,46 +75,43 @@ if __name__ == "__main__":
     print("Getting issues...")
     issues = api.getIssues()
 
-    print ("Creating bugreports.xlsx...")
-    # Creates bugreports.xlsx
+    print ("Creating issues.xlsx...")
+
+    # for i in issues:
+    #     print(issues)
+    #     print(type(i))
+    #     print(i.keys())
+    #     print("=================================")
+
     wb = Workbook()
+
     ws = wb.active
 
-    headers = ["id", "title", "description", "comments", "created_at", "uploaded_at", "closed_at"]
+    headers = ["id", "number", "issue_url", "repo_url", "events_url", "state", "html_url", 
+    "milestone", "title", "description", "comments", "created_at", "uploaded_at", "closed_at"]
     ws.append(headers)
 
     for issue in issues:
-        ws.append([issue["id"], issue["title"], issue["description"].encode('utf-8'), issue["comments"], issue["created_at"],
-                             issue["updated_at"], issue["closed_at"]])
+        ws.append([issue["id"], issue["number"], issue["issue_url"], issue["repo_url"], issue["events_url"], issue["state"],
+        issue["html_url"], issue["milestone"], issue["title"], issue["description"].encode('utf-8'), 
+        issue["comments"], issue["created_at"], issue["updated_at"], issue["closed_at"]])
 
-    wb.save("bugreports.xlsx")
+    wb.save("issues.xlsx")
 
-    print ("Creating events.xlsx...")
-    # Creates events.xlsx
+# =======================================================================================
+    print ("Creating labels.xlsx...")
+
     wb = Workbook()
+
     ws = wb.active
 
-    headers = ["id", "issue_id", "created_at"]
+    headers = ["issue_id","issue_number", "label_id", "label"]
     ws.append(headers)
 
     for issue in issues:
-        for event in issue["events"]:
-            ws.append([event["id"], event["issue_id"], event["created_at"]])
+        labels = issue["labels"]
 
-    wb.save("events.xlsx")
+        for label in labels:
+            ws.append([ label["issue_id"], label["issue_number"], label["label_id"], label["label"]])
 
-    print ("Creating commits.xlsx...")
-    # Creates commits.xlsx
-    wb = Workbook()
-    ws = wb.active
-
-    i = 1
-    headers = ["id", "event_id", "filename", "patch"]
-    ws.append(headers)
-
-    for issue in issues:
-        for event in issue["events"]:
-            for commit in event["commit"]["files"]:
-                ws.append([i, event["id"], commit["filename"], commit["patch"].encode('utf-8')])
-
-    wb.save("commits.xlsx")
+    wb.save("labels.xlsx")
