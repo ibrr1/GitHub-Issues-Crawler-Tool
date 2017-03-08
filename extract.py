@@ -14,7 +14,7 @@ class GithubAPI:
         "page": 1,
         "state": "all",
     }
-    auth = ("theeibwen", "09196db17fc3dda1cfddb5a60f1516e5309d623b")
+    auth = ("ibrr1", "c1cd298b39ecee5371005654514479a7c27fa3ba")
 
     # def __init__(self, url):
     #      # https://github.com/jroal/a2dpvolume/issues
