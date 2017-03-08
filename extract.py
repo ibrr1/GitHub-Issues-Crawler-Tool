@@ -70,6 +70,7 @@ class GithubAPI:
 
             for label in e["labels"]:
                  labelIssue = collections.OrderedDict()
+                 labelIssue["issue_repo_url"] = e["repository_url"]
                  labelIssue["issue_id"] = e["id"]
                  labelIssue["issue_number"] = e["number"]
                  labelIssue["label_id"] = label["id"]
@@ -129,12 +130,12 @@ if __name__ == "__main__":
     with open("labels.csv", 'a', encoding='utf-8', newline="") as file:
         writer = csv.writer(file)
 
-        writer.writerow(("issue_id","issue_number", "label_id", "label"))
+        writer.writerow(("issue_repo_url", "issue_id","issue_number", "label_id", "label"))
 
         for issue in issues:
             labels = issue["labels"]
             for label in labels:
-                writer.writerow(( label["issue_id"], label["issue_number"], label["label_id"], label["label"] ))
+                writer.writerow(( label["issue_repo_url"], label["issue_id"], label["issue_number"], label["label_id"], label["label"] ))
 
 
 
