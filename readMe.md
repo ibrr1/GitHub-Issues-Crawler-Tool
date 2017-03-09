@@ -1,6 +1,7 @@
 DESCRIPTION: 
 ------------
-This tool works by curling all the issues information along with the labels assigned for each issue for all the GitHub repos in github_issues_url.csv file . 
+This tool works by crawling
+all the issues information along with the labels assigned for each issue for all the GitHub repos in github_issues_url.csv file . 
 
 
 SETTING UP THE TOOL:
