@@ -14,14 +14,7 @@ class GithubAPI:
         "page": 1,
         "state": "all",
     }
-    auth = ("ibrr1", "c1cd298b39ecee5371005654514479a7c27fa3ba")
-
-    # def __init__(self, url):
-    #      # https://github.com/jroal/a2dpvolume/issues
-        
-
-    #     # self.repos_api_url = "https://api.github.com/repos/" + user + "/" + repo
-    #     self.issues_api_url = url
+    auth = ("Your_GitHub_Username", "Your_GitHub_Password")
 
     def getIssues(self, url):
 
@@ -30,7 +23,6 @@ class GithubAPI:
         "page": 1,
         "state": "all",
         }
-        self.auth = ("theeibwen", "09196db17fc3dda1cfddb5a60f1516e5309d623b")
 
         self.raw = []
 
@@ -115,12 +107,12 @@ if __name__ == "__main__":
     with open("issues.csv", 'a', encoding='utf-8' ,newline="") as file:
         writer = csv.writer(file)
 
-        writer.writerow(("id", "number", "issue_url", "repo_url", "events_url", "state", "html_url", 
+        writer.writerow(("id", "number", "issue_url", "repo_url", "events_url", "state", "html_url",
         "milestone", "title", "comments", "created_at", "uploaded_at", "closed_at"))
 
         for issue in issues:
             writer.writerow((issue["id"], issue["number"], issue["issue_url"], issue["repo_url"], issue["events_url"], issue["state"],
-            issue["html_url"], issue["milestone"], issue["title"], 
+            issue["html_url"], issue["milestone"], issue["title"],
             issue["comments"], issue["created_at"], issue["updated_at"], issue["closed_at"]))
 
 
@@ -136,43 +128,3 @@ if __name__ == "__main__":
             labels = issue["labels"]
             for label in labels:
                 writer.writerow(( label["issue_repo_url"], label["issue_id"], label["issue_number"], label["label_id"], label["label"] ))
-
-
-
-
-        # for i in issues:
-        #     print(issues)
-        #     print(type(i))
-        #     print(i.keys())
-        #     print("=================================")
-
-        # wb = Workbook()
-
-        # ws = wb.active
-
-        # headers = ["id", "number", "issue_url", "repo_url", "events_url", "state", "html_url", 
-        # "milestone", "title", "description", "comments", "created_at", "uploaded_at", "closed_at"]
-        # ws.append(headers)
-
-        # for issue in issues:
-        #     ws.append([issue["id"], issue["number"], issue["issue_url"], issue["repo_url"], issue["events_url"], issue["state"],
-        #     issue["html_url"], issue["milestone"], issue["title"], issue["description"], 
-        #     issue["comments"], issue["created_at"], issue["updated_at"], issue["closed_at"]])
-
-        # wb.save("issues.xlsx")
-
-
-        # wb = Workbook()
-
-        # ws = wb.active
-
-        # headers = ["issue_id","issue_number", "label_id", "label"]
-        # ws.append(headers)
-
-        # for issue in issues:
-        #     labels = issue["labels"]
-
-        #     for label in labels:
-        #         ws.append([ label["issue_id"], label["issue_number"], label["label_id"], label["label"]])
-
-        # wb.save("labels.xlsx")
